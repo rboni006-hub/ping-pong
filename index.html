@@ -54,12 +54,10 @@ canvas {
         ballX += ballSpeedX;
         ballY += ballSpeedY;
 
-        // "Stupid" AI Movement Logic:
-        // Instead of directly tracking the ball, it moves randomly and slowly
-        // Only makes a correction attempt if the ball is in its half of the screen
-        const aiSpeed = 4; // Slower speed
-        if (ballX > canvas.width / 2) { // Only attempt to move if ball is in AI's court
-            if (Math.random() > 0.6) { // 40% chance to move up or down on each frame
+       
+        const aiSpeed = 17; 
+        if (ballX > canvas.width / 2) { 
+            if (Math.random() > 0.6) { 
                 if (aiY + paddleHeight / 2 < ballY) {
                     aiY += aiSpeed;
                 } else {

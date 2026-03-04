@@ -33,6 +33,9 @@ canvas {
     let ballSpeedX = 5, ballSpeedY = 5;
     let playerScore = 0, aiScore = 0;
 
+    // Define ball size as a constant for the square
+    const ballSize = 16; 
+
     // Player Controls
     document.addEventListener("mousemove", (e) => {
         let rect = canvas.getBoundingClientRect();
@@ -54,10 +57,9 @@ canvas {
         ballX += ballSpeedX;
         ballY += ballSpeedY;
 
-       
-        const aiSpeed = 17; 
-        if (ballX > canvas.width / 2) { 
-            if (Math.random() > 0.6) { 
+        const aiSpeed = 17;
+        if (ballX > canvas.width / 2) {
+            if (Math.random() > 0.6) {
                 if (aiY + paddleHeight / 2 < ballY) {
                     aiY += aiSpeed;
                 } else {
@@ -65,18 +67,17 @@ canvas {
                 }
             }
         }
-        
         // Constrain AI paddle within canvas bounds
         aiY = Math.max(0, Math.min(canvas.height - paddleHeight, aiY));
 
         // Wall Collision (Top/Bottom)
-        if (ballY <= 0 || ballY >= canvas.height) {
+        if (ballY - ballSize / 2 <= 0 || ballY + ballSize / 2 >= canvas.height) { // Adjusted collision check for square
             ballSpeedY *= -1;
         }
 
         // Paddle Collision Detection
         // Player paddle collision
-        if (ballX <= paddleWidth + 10 && ballY > playerY && ballY < playerY + paddleHeight) {
+        if (ballX - ballSize / 2 <= paddleWidth + 10 && ballY > playerY && ballY < playerY + paddleHeight) { // Adjusted collision check
             // Ensure ball is moving left before reflecting
             if (ballSpeedX < 0) {
                 ballSpeedX *= -1;
@@ -84,7 +85,7 @@ canvas {
         }
 
         // AI paddle collision
-        if (ballX >= canvas.width - paddleWidth - 10 && ballY > aiY && ballY < aiY + paddleHeight) {
+        if (ballX + ballSize / 2 >= canvas.width - paddleWidth - 10 && ballY > aiY && ballY < aiY + paddleHeight) { // Adjusted collision check
             // Ensure ball is moving right before reflecting
             if (ballSpeedX > 0) {
                 ballSpeedX *= -1;
@@ -92,11 +93,11 @@ canvas {
         }
 
         // Scoring
-        if (ballX < 0) {
+        if (ballX + ballSize / 2 < 0) { // Adjusted collision check
             aiScore++;
             resetBall();
         }
-        if (ballX > canvas.width) {
+        if (ballX - ballSize / 2 > canvas.width) { // Adjusted collision check
             playerScore++;
             resetBall();
         }
@@ -112,10 +113,9 @@ canvas {
         // AI paddle at x = canvas width - paddle width - 10
         ctx.fillRect(canvas.width - paddleWidth - 10, aiY, paddleWidth, paddleHeight);
 
-        // Draw Ball
-        ctx.beginPath();
-        ctx.arc(ballX, ballY, 8, 0, Math.PI * 2);
-        ctx.fill();
+        
+        // Draw the square using fillRect
+        ctx.fillRect(ballX - ballSize / 2, ballY - ballSize / 2, ballSize, ballSize); 
 
         // Draw Scores
         ctx.font = "30px Arial";

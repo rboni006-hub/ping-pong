@@ -18,7 +18,7 @@
         let playerY = canvas.height / 2 - paddleHeight / 2;
         let aiY = canvas.height / 2 - paddleHeight / 2;
         let ballX = canvas.width / 2, ballY = canvas.height / 2;
-        let ballSpeedX = 5, ballSpeedY = 5;
+        let ballSpeedX = 10, ballSpeedY = 10;
         let playerScore = 0, aiScore = 0;
         const ballSize = 16;
 
@@ -53,7 +53,7 @@
 
             ballX += ballSpeedX;
             ballY += ballSpeedY;
-            const aiSpeed = 7.5; // Slightly slower for better gameplay
+            const aiSpeed = 5.5; // Slower for better gameplay
 
             // AI Movement
             if (ballX > canvas.width / 2) {

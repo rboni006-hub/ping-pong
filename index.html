@@ -39,7 +39,7 @@
         function update() {
             ballX += ballSpeedX;
             ballY += ballSpeedY;
-            const aiSpeed = 12;
+            const aiSpeed = 8;
             if (ballX > canvas.width / 2) {
                 if (Math.random() > 0.6) {
                     if (aiY + paddleHeight / 2 < ballY) { aiY += aiSpeed; } 
@@ -81,7 +81,7 @@
 
             // Draw Scores
             ctx.font = "30px Arial";
-            ctx.fillStyle = "white";
+            ctx.fillStyle = "lime";
             ctx.fillText(playerScore, canvas.width / 4, 50);
             ctx.fillText(aiScore, 3 * canvas.width / 4, 50);
 

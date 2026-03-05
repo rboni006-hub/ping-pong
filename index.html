@@ -39,7 +39,7 @@
         function update() {
             ballX += ballSpeedX;
             ballY += ballSpeedY;
-            const aiSpeed = 17;
+            const aiSpeed = 12;
             if (ballX > canvas.width / 2) {
                 if (Math.random() > 0.6) {
                     if (aiY + paddleHeight / 2 < ballY) { aiY += aiSpeed; } 

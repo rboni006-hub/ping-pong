@@ -10,8 +10,8 @@
 <body>
     <canvas id="gameCanvas" width="800" height="400"></canvas>
     <script>
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
 
         // Game Objects
         const paddleWidth = 10, paddleHeight = 100;
@@ -21,13 +21,19 @@
         let ballSpeedX = 10, ballSpeedY = 10;
         let playerScore = 0, aiScore = 0;
         const ballSize = 16;
+        const playerSpeed = 8; // Added speed constant
 
-        // --- NEW: Game State ---
-        let isGameRunning = false; 
+        // --- NEW: Game State & Controls ---
+        let isGameRunning = false;
+        const keys = {}; // Track key states
 
-        // Player Controls
-        document.addEventListener('mousemove', (e) => {
-            if (!isGameRunning) return; // Don't move paddle if game hasn't started
+        // Keyboard listeners
+        document.addEventListener('keydown', (e) => { keys[e.key] = true; });
+        document.addEventListener('keyup', (e) => { keys[e.key] = false; });
+
+        // Mouse/Touch controls (kept)
+        canvas.addEventListener('mousemove', (e) => {
+            if (!isGameRunning) return;
             let rect = canvas.getBoundingClientRect();
             playerY = e.clientY - rect.top - paddleHeight / 2;
             playerY = Math.max(0, Math.min(canvas.height - paddleHeight, playerY));
@@ -49,11 +55,23 @@
         }
 
         function update() {
-            if (!isGameRunning) return; // Do not update if not running
+            if (!isGameRunning) return;
 
+            // --- Player Movement (Keyboard) ---
+            if (keys['w'] || keys['ArrowUp']) {
+                playerY -= playerSpeed;
+            }
+            if (keys['s'] || keys['ArrowDown']) {
+                playerY += playerSpeed;
+            }
+            // Clamp player paddle
+            playerY = Math.max(0, Math.min(canvas.height - paddleHeight, playerY));
+
+            // Ball physics
             ballX += ballSpeedX;
             ballY += ballSpeedY;
-            const aiSpeed = 2; // Slower for better gameplay
+
+            const aiSpeed = 5; // Slightly faster for challenge
 
             // AI Movement
             if (ballX > canvas.width / 2) {
@@ -69,6 +87,8 @@
             if (ballY - ballSize / 2 <= 0 || ballY + ballSize / 2 >= canvas.height) {
                 ballSpeedY *= -1;
             }
+
+            // Paddle Collision
             if (ballX - ballSize / 2 <= paddleWidth + 10 && ballY > playerY && ballY < playerY + paddleHeight) {
                 if (ballSpeedX < 0) ballSpeedX *= -1;
             }
@@ -92,35 +112,35 @@
 
             if (!isGameRunning) {
                 // --- DRAW START SCREEN ---
-                ctx.fillStyle = 'white';
-                ctx.font = '50px Arial';
-                ctx.textAlign = 'center';
+                ctx.fillStyle = "white";
+                ctx.font = "50px Arial";
+                ctx.textAlign = "center";
                 ctx.fillText("VERY MUCH PONG", canvas.width / 2, canvas.height / 2 - 30);
                 
                 // Red Button
-                ctx.fillStyle = 'red';
+                ctx.fillStyle = "red";
                 ctx.fillRect(canvas.width / 2 - 100, canvas.height / 2 + 10, 200, 60);
                 
-                ctx.fillStyle = 'white';
-                ctx.font = '30px Arial';
+                ctx.fillStyle = "white";
+                ctx.font = "30px Arial";
                 ctx.fillText("START", canvas.width / 2, canvas.height / 2 + 50);
             } else {
                 // --- DRAW GAME ---
                 // Player paddle - Dark Green
-                ctx.fillStyle = '#006400';
+                ctx.fillStyle = "#006400";
                 ctx.fillRect(10, playerY, paddleWidth, paddleHeight);
 
                 // AI paddle - Cyan
-                ctx.fillStyle = 'cyan';
+                ctx.fillStyle = "cyan";
                 ctx.fillRect(canvas.width - paddleWidth - 10, aiY, paddleWidth, paddleHeight);
 
                 // Ball - Lime
-                ctx.fillStyle = 'lime';
+                ctx.fillStyle = "lime";
                 ctx.fillRect(ballX - ballSize / 2, ballY - ballSize / 2, ballSize, ballSize);
 
                 // Draw Scores
-                ctx.font = '30px Arial';
-                ctx.fillStyle = 'white';
+                ctx.font = "30px Arial";
+                ctx.fillStyle = "white";
                 ctx.fillText(playerScore, canvas.width / 4, 50);
                 ctx.fillText(aiScore, 3 * canvas.width / 4, 50);
             }
